@@ -1,0 +1,68 @@
+<a class="back" routerLink="/plants">← Back to browse</a>
+
+@if (loading) {
+  <div class="spinner">Loading…</div>
+} @else if (error) {
+  <div class="error">{{ error }}</div>
+} @else if (plant) {
+  <article class="detail card">
+    <div class="hero">
+      @if (plant.imageUrl) {
+        <img [src]="plant.imageUrl" [alt]="plant.displayName" />
+      } @else {
+        <span class="placeholder">🌿</span>
+      }
+    </div>
+
+    <div class="info">
+      <h1>{{ plant.displayName }}</h1>
+      <em class="sci muted">{{ plant.scientificName }}</em>
+
+      <div class="tags">
+        <span class="badge" [class.indoor]="plant.isIndoor">
+          {{ plant.isIndoor ? 'Indoor' : 'Outdoor' }}
+        </span>
+        <span class="badge">☀️ {{ plant.lightRequirement }}</span>
+        <span class="badge">💧 Every {{ plant.watering.daysBetweenWatering }} days</span>
+      </div>
+
+      <div class="care">
+        <h2>Care</h2>
+        <dl>
+          <dt>Watering</dt>
+          <dd>
+            {{ plant.watering.category }} — about every
+            {{ plant.watering.daysBetweenWatering }} days
+            <span class="muted">({{ plant.watering.source === 'Derived' ? 'estimated' : 'custom' }})</span>
+          </dd>
+          <dt>Light</dt>
+          <dd>{{ plant.lightRequirement }}</dd>
+          <dt>Placement</dt>
+          <dd>{{ plant.isIndoor ? 'Indoor' : 'Outdoor' }}</dd>
+          @if (plant.family) {
+            <dt>Family</dt>
+            <dd>{{ plant.family }}</dd>
+          }
+          @if (plant.soilTexture) {
+            <dt>Soil</dt>
+            <dd>{{ plant.soilTexture }}</dd>
+          }
+        </dl>
+
+        @if (plant.description) {
+          <p class="description">{{ plant.description }}</p>
+        }
+      </div>
+
+      <button (click)="addToGarden()" [disabled]="added || adding">
+        @if (added) {
+          ✓ Added to your garden
+        } @else if (adding) {
+          Adding…
+        } @else {
+          + Add to my garden
+        }
+      </button>
+    </div>
+  </article>
+}

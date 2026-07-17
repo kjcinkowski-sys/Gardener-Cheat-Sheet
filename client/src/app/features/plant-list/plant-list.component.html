@@ -1,0 +1,73 @@
+<section class="intro">
+  <h1>Browse plants</h1>
+  <p class="muted">Search the catalog, then add plants to your garden to track their care.</p>
+
+  <form class="search" (ngSubmit)="search()">
+    <input
+      type="text"
+      name="query"
+      [(ngModel)]="query"
+      placeholder="Search by name, e.g. rose, basil, fern…"
+      aria-label="Search plants"
+    />
+    <button type="submit">Search</button>
+  </form>
+</section>
+
+@if (loading) {
+  <div class="spinner">Loading plants…</div>
+} @else if (error) {
+  <div class="error">{{ error }}</div>
+} @else if (results.length === 0) {
+  <p class="muted">No plants found. Try a different search.</p>
+} @else {
+  <div class="grid">
+    @for (plant of results; track plant.trefleId) {
+      <article class="card plant-card">
+        <a class="thumb" [routerLink]="['/plants', plant.trefleId]">
+          @if (plant.imageUrl) {
+            <img [src]="plant.imageUrl" [alt]="plant.displayName" loading="lazy" />
+          } @else {
+            <span class="placeholder">🌿</span>
+          }
+        </a>
+        <div class="body">
+          <a class="name" [routerLink]="['/plants', plant.trefleId]">{{ plant.displayName }}</a>
+          @if (plant.scientificName && plant.scientificName !== plant.displayName) {
+            <em class="sci muted">{{ plant.scientificName }}</em>
+          }
+          <div class="tags">
+            <span class="badge" [class.indoor]="plant.isIndoor">
+              {{ plant.isIndoor ? 'Indoor' : 'Outdoor' }}
+            </span>
+          </div>
+          <button
+            class="secondary add"
+            (click)="addToGarden(plant, $event)"
+            [disabled]="isAdded(plant) || isAdding(plant)"
+          >
+            @if (isAdded(plant)) {
+              ✓ In garden
+            } @else if (isAdding(plant)) {
+              Adding…
+            } @else {
+              + Add to garden
+            }
+          </button>
+        </div>
+      </article>
+    }
+  </div>
+
+  <div class="pager">
+    <button class="secondary" (click)="prevPage()" [disabled]="page <= 1">← Prev</button>
+    <span class="muted">Page {{ page }}@if (totalPages) { of {{ totalPages }} }</span>
+    <button
+      class="secondary"
+      (click)="nextPage()"
+      [disabled]="totalPages ? page >= totalPages : results.length === 0"
+    >
+      Next →
+    </button>
+  </div>
+}

@@ -1,0 +1,99 @@
+<section class="intro">
+  <h1>My garden</h1>
+  @if (!loading && entries.length > 0) {
+    <p class="muted">
+      {{ entries.length }} plant{{ entries.length === 1 ? '' : 's' }} ·
+      @if (dueCount > 0) {
+        <span class="badge due">{{ dueCount }} due for watering</span>
+      } @else {
+        <span class="badge">All watered up 🌱</span>
+      }
+    </p>
+  }
+</section>
+
+@if (loading) {
+  <div class="spinner">Loading your garden…</div>
+} @else if (error) {
+  <div class="error">{{ error }}</div>
+} @else if (entries.length === 0) {
+  <div class="empty card">
+    <p>Your garden is empty.</p>
+    <a routerLink="/plants"><button>Browse plants to add</button></a>
+  </div>
+} @else {
+  <div class="list">
+    @for (entry of entries; track entry.id) {
+      <article class="card entry" [class.due]="entry.isDue">
+        <a class="thumb" [routerLink]="['/plants', entry.trefleId]">
+          @if (entry.imageUrl) {
+            <img [src]="entry.imageUrl" [alt]="entry.displayName" loading="lazy" />
+          } @else {
+            <span class="placeholder">🌿</span>
+          }
+        </a>
+
+        <div class="body">
+          <div class="head">
+            <div>
+              <a class="name" [routerLink]="['/plants', entry.trefleId]">{{ entry.displayName }}</a>
+              @if (entry.scientificName && entry.scientificName !== entry.displayName) {
+                <em class="sci muted">{{ entry.scientificName }}</em>
+              }
+            </div>
+            <div class="tags">
+              <span class="badge" [class.indoor]="entry.isIndoor">
+                {{ entry.isIndoor ? 'Indoor' : 'Outdoor' }}
+              </span>
+              <span class="badge">☀️ {{ entry.lightRequirement }}</span>
+            </div>
+          </div>
+
+          <div class="watering">
+            💧 Every {{ entry.watering.daysBetweenWatering }} days
+            <span class="muted">({{ entry.watering.source === 'Derived' ? 'estimated' : 'custom' }})</span>
+            @if (entry.nextWateringDate) {
+              · Next: <strong [class.overdue]="entry.isDue">{{ entry.nextWateringDate }}</strong>
+            } @else {
+              · <span class="muted">not watered yet</span>
+            }
+          </div>
+
+          @if (editingId === entry.id) {
+            <div class="edit">
+              <label>
+                Nickname
+                <input type="text" name="nickname" [(ngModel)]="edit.nickname" />
+              </label>
+              <label>
+                Water every (days) — leave blank for estimated
+                <input type="number" name="days" min="1" [(ngModel)]="edit.wateringOverrideDays" />
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" name="indoor" [(ngModel)]="edit.isIndoor" />
+                Kept indoors
+              </label>
+              <label>
+                Notes
+                <textarea name="notes" rows="2" [(ngModel)]="edit.notes"></textarea>
+              </label>
+              <div class="actions">
+                <button (click)="saveEdit(entry)">Save</button>
+                <button class="secondary" (click)="cancelEdit()">Cancel</button>
+              </div>
+            </div>
+          } @else {
+            @if (entry.notes) {
+              <p class="notes muted">{{ entry.notes }}</p>
+            }
+            <div class="actions">
+              <button (click)="waterToday(entry)">💧 Water today</button>
+              <button class="secondary" (click)="startEdit(entry)">Edit</button>
+              <button class="danger" (click)="remove(entry)">Remove</button>
+            </div>
+          }
+        </div>
+      </article>
+    }
+  </div>
+}
