@@ -1,0 +1,83 @@
+.intro {
+  h1 {
+    margin: 0 0 0.25rem;
+  }
+}
+
+.search {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0 1.5rem;
+
+  input {
+    flex: 1;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.plant-card {
+  display: flex;
+  flex-direction: column;
+
+  .thumb {
+    display: block;
+    height: 150px;
+    background: #eef3ee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .placeholder {
+      font-size: 3rem;
+    }
+  }
+
+  .body {
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex: 1;
+  }
+
+  .name {
+    font-weight: 600;
+    text-decoration: none;
+    color: #1f2a1f;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .sci {
+    font-size: 0.8rem;
+  }
+
+  .tags {
+    margin-top: auto;
+  }
+
+  .add {
+    margin-top: 0.25rem;
+  }
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}

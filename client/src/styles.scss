@@ -1,0 +1,108 @@
+/* Global styles for Gardener Cheat Sheet */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #f4f7f4;
+  color: #1f2a1f;
+}
+
+a {
+  color: #1b5e20;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  padding: 0.55rem 1rem;
+  background: #2e7d32;
+  color: #fff;
+  transition: background 0.15s ease;
+
+  &:hover:not(:disabled) {
+    background: #1b5e20;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  &.secondary {
+    background: #e0e0e0;
+    color: #333;
+
+    &:hover:not(:disabled) {
+      background: #cfcfcf;
+    }
+  }
+
+  &.danger {
+    background: #c62828;
+
+    &:hover:not(:disabled) {
+      background: #b71c1c;
+    }
+  }
+}
+
+input,
+textarea {
+  font: inherit;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid #c4d0c4;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge.indoor {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.badge.due {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.muted {
+  color: #6b776b;
+}
+
+.spinner {
+  padding: 2rem;
+  text-align: center;
+  color: #6b776b;
+}
+
+.error {
+  padding: 1rem;
+  border-radius: 8px;
+  background: #ffebee;
+  color: #c62828;
+}

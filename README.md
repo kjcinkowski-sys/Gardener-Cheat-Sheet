@@ -4,7 +4,7 @@ A web app for browsing plants, viewing their care needs (photos, watering
 schedule, light needs, indoor/outdoor, and more), and adding them to your own
 garden. Plant data comes from the free [Trefle API](https://trefle.io).
 
-- **Frontend:** Angular (coming next)
+- **Frontend:** Angular 18 (standalone components) — browse, detail, and My Garden
 - **Backend:** ASP.NET Core Web API (C#), object-oriented / layered design
 - **Persistence:** EF Core + SQLite
 - **External data:** Trefle (proxied through the backend so the token stays server-side)
@@ -79,10 +79,25 @@ Requires the [.NET 8 SDK](https://dotnet.microsoft.com/download).
    DELETE /api/garden/{id}
    ```
 
+## Running the frontend
+
+Requires Node 18+ and the backend running on `http://localhost:5080`.
+
+```bash
+cd client
+npm install
+npm start          # ng serve on http://localhost:4200
+```
+
+`ng serve` proxies `/api/*` to the backend via `client/proxy.conf.json`, so no
+CORS setup is needed in dev. Open http://localhost:4200 to browse plants and
+build your garden.
+
 ## Running the tests
 
 ```bash
-dotnet test
+dotnet test                 # backend (domain / watering logic)
+cd client && npm test       # frontend (Angular / Karma)
 ```
 
 ## Roadmap
@@ -90,6 +105,6 @@ dotnet test
 1. **Foundations** — solution, EF Core + SQLite, Trefle client, CORS/health ✅
 2. **Plant catalog** — search + detail with derived watering/light/indoor ✅ (backend)
 3. **My Garden** — add/remove, overrides, watering tracking ✅ (backend)
-4. **Angular frontend** — browse, detail, and garden UIs (next)
+4. **Angular frontend** — browse, detail, and garden UIs ✅
 5. **Polish** — due-today dashboard, SQLite response cache, more tests
 6. **Multi-user** — ASP.NET Core Identity + JWT, per-user gardens
