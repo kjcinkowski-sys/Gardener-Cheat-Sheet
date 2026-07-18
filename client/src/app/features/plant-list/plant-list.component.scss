@@ -14,6 +14,27 @@
   }
 }
 
+.summary {
+  margin: 0 0 0.75rem;
+  min-height: 1.25rem;
+  font-size: 0.85rem;
+}
+
+.error.inline {
+  margin-bottom: 1rem;
+}
+
+.results {
+  // Keep the grid mounted while refetching; dim it instead of replacing it so
+  // the page doesn't blank out and lose scroll position on every search/page.
+  transition: opacity 0.15s ease;
+
+  &.is-loading {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));

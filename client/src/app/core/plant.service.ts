@@ -8,8 +8,11 @@ export class PlantService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = '/api/plants';
 
+  /** Results per page, mirrors the server's Trefle page size. */
+  readonly pageSize = 20;
+
   search(query: string, page = 1): Observable<PlantSearchResult> {
-    const params = new HttpParams().set('search', query ?? '').set('page', page);
+    const params = new HttpParams().set('search', (query ?? '').trim()).set('page', page);
     return this.http.get<PlantSearchResult>(this.baseUrl, { params });
   }
 
