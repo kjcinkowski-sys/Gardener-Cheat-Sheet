@@ -1,0 +1,68 @@
+.photo-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .preview {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    background: #eef3ee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .placeholder {
+      font-size: 2.5rem;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.7);
+      font-size: 0.85rem;
+    }
+  }
+
+  .controls {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  // Style the file input as a button while keeping the native input accessible.
+  .file-button {
+    display: inline-block;
+    background: #e0e0e0;
+    color: #333;
+    border-radius: 6px;
+    padding: 0.5rem 0.9rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+
+    &:hover {
+      background: #cfcfcf;
+    }
+
+    input {
+      display: none;
+    }
+  }
+
+  .error.inline {
+    margin: 0;
+    color: #c62828;
+    font-size: 0.85rem;
+  }
+}

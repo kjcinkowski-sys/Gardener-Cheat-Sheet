@@ -1,5 +1,8 @@
 <section class="intro">
-  <h1>My garden</h1>
+  <div class="intro-head">
+    <h1>My garden</h1>
+    <a routerLink="/garden/add"><button class="secondary">+ Add your own plant</button></a>
+  </div>
   @if (!loading && entries.length > 0) {
     <p class="muted">
       {{ entries.length }} plant{{ entries.length === 1 ? '' : 's' }} ·
@@ -19,24 +22,42 @@
 } @else if (entries.length === 0) {
   <div class="empty card">
     <p>Your garden is empty.</p>
-    <a routerLink="/plants"><button>Browse plants to add</button></a>
+    <div class="empty-actions">
+      <a routerLink="/plants"><button>Browse plants to add</button></a>
+      <a routerLink="/garden/add"><button class="secondary">Add your own plant</button></a>
+    </div>
   </div>
 } @else {
   <div class="list">
     @for (entry of entries; track entry.id) {
       <article class="card entry" [class.due]="entry.isDue">
-        <a class="thumb" [routerLink]="['/plants', entry.trefleId]">
-          @if (entry.imageUrl) {
-            <img [src]="entry.imageUrl" [alt]="entry.displayName" loading="lazy" />
-          } @else {
-            <span class="placeholder">🌿</span>
-          }
-        </a>
+        @if (entry.isCustom) {
+          <span class="thumb">
+            @if (entry.imageUrl) {
+              <img [src]="entry.imageUrl" [alt]="entry.displayName" loading="lazy" />
+            } @else {
+              <span class="placeholder">🌿</span>
+            }
+          </span>
+        } @else {
+          <a class="thumb" [routerLink]="['/plants', entry.trefleId]">
+            @if (entry.imageUrl) {
+              <img [src]="entry.imageUrl" [alt]="entry.displayName" loading="lazy" />
+            } @else {
+              <span class="placeholder">🌿</span>
+            }
+          </a>
+        }
 
         <div class="body">
           <div class="head">
             <div>
-              <a class="name" [routerLink]="['/plants', entry.trefleId]">{{ entry.displayName }}</a>
+              @if (entry.isCustom) {
+                <span class="name">{{ entry.displayName }}</span>
+                <span class="badge custom">Custom</span>
+              } @else {
+                <a class="name" [routerLink]="['/plants', entry.trefleId]">{{ entry.displayName }}</a>
+              }
               @if (entry.scientificName && entry.scientificName !== entry.displayName) {
                 <em class="sci muted">{{ entry.scientificName }}</em>
               }
@@ -61,10 +82,39 @@
 
           @if (editingId === entry.id) {
             <div class="edit">
-              <label>
-                Nickname
-                <input type="text" name="nickname" [(ngModel)]="edit.nickname" />
-              </label>
+              @if (edit.isCustom) {
+                <label>
+                  Name
+                  <input type="text" name="displayName" [(ngModel)]="edit.displayName" />
+                </label>
+                <label>
+                  Scientific name
+                  <input type="text" name="scientificName" [(ngModel)]="edit.scientificName" />
+                </label>
+              } @else {
+                <label>
+                  Nickname
+                  <input type="text" name="nickname" [(ngModel)]="edit.nickname" />
+                </label>
+              }
+
+              <div class="photo-field">
+                <span class="label">Photo</span>
+                <app-photo-picker [imageUrl]="edit.imageUrl" (imageUrlChange)="onEditPhotoChange($event)" />
+              </div>
+
+              @if (edit.isCustom) {
+                <label>
+                  Light
+                  <select name="lightLevel" [(ngModel)]="edit.lightLevel">
+                    <option [ngValue]="null">Unknown</option>
+                    <option [ngValue]="2">Shade</option>
+                    <option [ngValue]="5">Partial shade</option>
+                    <option [ngValue]="8">Full sun</option>
+                  </select>
+                </label>
+              }
+
               <label>
                 Water every (days) — leave blank for estimated
                 <input type="number" name="days" min="1" [(ngModel)]="edit.wateringOverrideDays" />

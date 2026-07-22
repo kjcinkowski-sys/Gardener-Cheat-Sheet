@@ -2,7 +2,8 @@ import { WateringSchedule } from './watering-schedule';
 
 export interface GardenEntry {
   id: number;
-  trefleId: number;
+  trefleId?: number;
+  isCustom: boolean;
   displayName: string;
   nickname?: string;
   scientificName?: string;

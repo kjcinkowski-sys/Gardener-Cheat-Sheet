@@ -17,6 +17,10 @@ client/dist/
 client/.angular/
 npm-debug.log*
 
+# ---------- User uploads (runtime-generated content) ----------
+wwwroot/uploads/
+**/wwwroot/uploads/
+
 # ---------- Env / secrets ----------
 *.env
 .env.local

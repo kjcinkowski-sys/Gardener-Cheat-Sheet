@@ -38,6 +38,21 @@ public sealed class GardenController : ControllerBase
         }
     }
 
+    /// <summary>Add a user-created custom plant (not in Trefle) to the garden.</summary>
+    [HttpPost("custom")]
+    public async Task<ActionResult<GardenEntryDto>> AddCustom(
+        [FromBody] AddCustomPlantRequest request,
+        CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(request.DisplayName))
+        {
+            return BadRequest(new { message = "A plant name is required." });
+        }
+
+        var entry = await _garden.AddCustomAsync(request, ct);
+        return CreatedAtAction(nameof(GetGarden), routeValues: null, value: entry);
+    }
+
     /// <summary>Update a garden entry (nickname, notes, watering override, etc.).</summary>
     [HttpPut("{id:int}")]
     public async Task<ActionResult<GardenEntryDto>> Update(

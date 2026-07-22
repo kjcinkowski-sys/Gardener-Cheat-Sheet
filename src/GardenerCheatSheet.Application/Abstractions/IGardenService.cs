@@ -13,6 +13,8 @@ public interface IGardenService
 
     Task<GardenEntryDto> AddAsync(AddGardenEntryRequest request, CancellationToken ct = default);
 
+    Task<GardenEntryDto> AddCustomAsync(AddCustomPlantRequest request, CancellationToken ct = default);
+
     Task<GardenEntryDto?> UpdateAsync(int id, UpdateGardenEntryRequest request, CancellationToken ct = default);
 
     Task<bool> RemoveAsync(int id, CancellationToken ct = default);

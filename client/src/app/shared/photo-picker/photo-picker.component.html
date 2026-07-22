@@ -1,0 +1,31 @@
+<div class="photo-picker">
+  <div class="preview">
+    @if (imageUrl) {
+      <img [src]="imageUrl" alt="Selected plant photo" />
+    } @else {
+      <span class="placeholder">🌿</span>
+    }
+    @if (uploading) {
+      <span class="overlay">Uploading…</span>
+    }
+  </div>
+
+  <div class="controls">
+    <label class="file-button">
+      {{ imageUrl ? 'Change photo' : 'Choose photo' }}
+      <input
+        type="file"
+        accept="image/png,image/jpeg,image/webp,image/gif"
+        (change)="onFile($event)"
+        [disabled]="uploading"
+      />
+    </label>
+    @if (imageUrl) {
+      <button type="button" class="secondary" (click)="remove()" [disabled]="uploading">Remove</button>
+    }
+  </div>
+
+  @if (error) {
+    <p class="error inline">{{ error }}</p>
+  }
+</div>

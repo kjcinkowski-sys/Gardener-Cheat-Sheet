@@ -1,0 +1,62 @@
+<section class="intro">
+  <h1>Add your own plant</h1>
+  <p class="muted">
+    For plants Trefle doesn't list (habaneros, heirloom varieties, and the like).
+    Add the details and a photo, and it goes straight into your garden.
+  </p>
+</section>
+
+<form class="add-form card" (ngSubmit)="save()">
+  <label>
+    Name <span class="req">*</span>
+    <input type="text" name="displayName" [(ngModel)]="displayName" placeholder="e.g. Habanero pepper" required />
+  </label>
+
+  <label>
+    Scientific name <span class="muted">(optional)</span>
+    <input type="text" name="scientificName" [(ngModel)]="scientificName" placeholder="e.g. Capsicum chinense" />
+  </label>
+
+  <div class="photo-field">
+    <span class="label">Photo</span>
+    <app-photo-picker [imageUrl]="imageUrl" (imageUrlChange)="onPhotoChange($event)" />
+  </div>
+
+  <div class="row">
+    <label>
+      Light
+      <select name="lightLevel" [(ngModel)]="lightLevel">
+        <option [ngValue]="null">Unknown</option>
+        <option [ngValue]="2">Shade</option>
+        <option [ngValue]="5">Partial shade</option>
+        <option [ngValue]="8">Full sun</option>
+      </select>
+    </label>
+
+    <label>
+      Water every (days)
+      <input type="number" name="days" min="1" [(ngModel)]="wateringIntervalDays" placeholder="e.g. 3" />
+    </label>
+  </div>
+
+  <label class="checkbox">
+    <input type="checkbox" name="indoor" [(ngModel)]="isIndoor" />
+    Kept indoors
+  </label>
+
+  <label>
+    Notes <span class="muted">(optional)</span>
+    <textarea name="notes" rows="3" [(ngModel)]="notes" placeholder="Care reminders, where it's planted, …"></textarea>
+  </label>
+
+  @if (error) {
+    <p class="error" role="alert">{{ error }}</p>
+  }
+
+  <div class="actions">
+    <button type="submit" [disabled]="!canSave">
+      @if (saving) { Saving… } @else { Add to garden }
+    </button>
+    <a routerLink="/garden"><button type="button" class="secondary">Cancel</button></a>
+  </div>
+</form>
