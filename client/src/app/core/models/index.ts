@@ -7,4 +7,5 @@ export * from './plant-search-result';
 export * from './plant-detail';
 export * from './garden-entry';
 export * from './add-garden-entry-request';
+export * from './add-custom-plant-request';
 export * from './update-garden-entry-request';

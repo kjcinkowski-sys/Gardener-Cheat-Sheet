@@ -36,6 +36,16 @@ public class GardenEntry
     public string? Notes { get; private set; }
 
     /// <summary>
+    /// The user's own photo for this entry. Null means "use the species image"
+    /// (<see cref="Plant.ImageUrl"/>). Lets a user set a personal photo on any
+    /// entry — including a Trefle one — without mutating the shared species row.
+    /// </summary>
+    public string? ImageUrlOverride { get; private set; }
+
+    /// <summary>Effective image, resolving the override.</summary>
+    public string? ImageUrl => string.IsNullOrWhiteSpace(ImageUrlOverride) ? Plant.ImageUrl : ImageUrlOverride;
+
+    /// <summary>
     /// Days between watering when the user has overridden the derived schedule.
     /// Null means "use the species-derived schedule".
     /// </summary>
@@ -67,6 +77,10 @@ public class GardenEntry
     public void Rename(string? nickname) => Nickname = nickname;
 
     public void SetNotes(string? notes) => Notes = notes;
+
+    /// <summary>Sets or clears (null/empty) the user's own photo for this entry.</summary>
+    public void SetImageUrl(string? imageUrl) =>
+        ImageUrlOverride = string.IsNullOrWhiteSpace(imageUrl) ? null : imageUrl;
 
     public void MarkWatered(DateOnly on) => LastWatered = on;
 

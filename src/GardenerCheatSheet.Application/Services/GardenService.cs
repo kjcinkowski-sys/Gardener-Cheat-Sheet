@@ -58,6 +58,42 @@ public sealed class GardenService : IGardenService
         return ToDto(entry, Today);
     }
 
+    public async Task<GardenEntryDto> AddCustomAsync(AddCustomPlantRequest request, CancellationToken ct = default)
+    {
+        var growth = new GrowthInfo { Light = request.LightLevel };
+        var plant = Plant.CreateCustom(
+            displayName: request.DisplayName,
+            scientificName: request.ScientificName,
+            family: null,
+            imageUrl: null,
+            growth: growth,
+            isIndoor: request.IsIndoor);
+
+        // Persist the plant first so its surrogate key is available for the entry,
+        // mirroring EnsurePlantCachedAsync.
+        await _plants.AddAsync(plant, ct);
+        await _plants.SaveChangesAsync(ct);
+
+        var entry = new GardenEntry(plant, request.Nickname, Today);
+        if (request.WateringIntervalDays is int days)
+        {
+            entry.OverrideWatering(days);
+        }
+        if (!string.IsNullOrWhiteSpace(request.Notes))
+        {
+            entry.SetNotes(request.Notes);
+        }
+        if (!string.IsNullOrWhiteSpace(request.ImageUrl))
+        {
+            entry.SetImageUrl(request.ImageUrl);
+        }
+
+        await _garden.AddAsync(entry, ct);
+        await _garden.SaveChangesAsync(ct);
+
+        return ToDto(entry, Today);
+    }
+
     public async Task<GardenEntryDto?> UpdateAsync(int id, UpdateGardenEntryRequest request, CancellationToken ct = default)
     {
         var entry = await _garden.GetByIdAsync(id, ct);
@@ -95,8 +131,50 @@ public sealed class GardenService : IGardenService
             entry.OverrideIndoor(indoor);
         }
 
+        if (request.ClearImage)
+        {
+            entry.SetImageUrl(null);
+        }
+        else if (request.ImageUrl is not null)
+        {
+            entry.SetImageUrl(request.ImageUrl);
+        }
+
+        ApplyCustomPlantEdits(entry.Plant, request);
+
         await _garden.SaveChangesAsync(ct);
         return ToDto(entry, Today);
+    }
+
+    /// <summary>
+    /// Applies identity/light edits to a custom plant. No-op for Trefle plants
+    /// (their data is owned by the source) and when no such fields were sent.
+    /// </summary>
+    private static void ApplyCustomPlantEdits(Plant plant, UpdateGardenEntryRequest request)
+    {
+        if (plant.Source != PlantSource.Custom)
+        {
+            return;
+        }
+
+        var touchesIdentity = request.DisplayName is not null
+                              || request.ScientificName is not null
+                              || request.LightLevel is not null
+                              || request.ClearLightLevel;
+        if (!touchesIdentity)
+        {
+            return;
+        }
+
+        var light = request.ClearLightLevel ? null : request.LightLevel ?? plant.Growth.Light;
+        var growth = plant.Growth with { Light = light };
+
+        var displayName = string.IsNullOrWhiteSpace(request.DisplayName)
+            ? plant.DisplayName
+            : request.DisplayName!;
+        var scientificName = request.ScientificName ?? plant.ScientificName;
+
+        plant.EditCustomDetails(displayName, scientificName, growth);
     }
 
     public async Task<bool> RemoveAsync(int id, CancellationToken ct = default)

@@ -17,5 +17,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/garden/garden.component').then((m) => m.GardenComponent)
   },
+  {
+    path: 'garden/add',
+    loadComponent: () =>
+      import('./features/add-plant/add-plant.component').then((m) => m.AddPlantComponent)
+  },
   { path: '**', redirectTo: 'plants' }
 ];

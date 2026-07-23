@@ -19,8 +19,16 @@ public sealed class AppDbContext : DbContext
         modelBuilder.Entity<Plant>(plant =>
         {
             plant.HasKey(p => p.Id);
-            plant.HasIndex(p => p.TrefleId).IsUnique();
+
+            // TrefleId is unique only among Trefle-sourced plants; custom plants
+            // store NULL, and many nulls must be allowed, so the unique index is
+            // filtered to non-null values (a partial index in SQLite).
+            plant.HasIndex(p => p.TrefleId)
+                .IsUnique()
+                .HasFilter("\"TrefleId\" IS NOT NULL");
+
             plant.Property(p => p.ScientificName).IsRequired();
+            plant.Property(p => p.Source).HasConversion<int>();
 
             // Computed, derived-only properties are not persisted.
             plant.Ignore(p => p.LightRequirement);
@@ -35,8 +43,9 @@ public sealed class AppDbContext : DbContext
         {
             entry.HasKey(e => e.Id);
 
-            // Computed override-resolution property is not persisted.
+            // Computed override-resolution properties are not persisted.
             entry.Ignore(e => e.IsIndoor);
+            entry.Ignore(e => e.ImageUrl);
 
             entry.HasOne(e => e.Plant)
                 .WithMany()

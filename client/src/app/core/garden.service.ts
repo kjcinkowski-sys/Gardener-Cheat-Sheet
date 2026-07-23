@@ -1,7 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AddGardenEntryRequest, GardenEntry, UpdateGardenEntryRequest } from './models';
+import {
+  AddCustomPlantRequest,
+  AddGardenEntryRequest,
+  GardenEntry,
+  UpdateGardenEntryRequest
+} from './models';
 
 @Injectable({ providedIn: 'root' })
 export class GardenService {
@@ -14,6 +19,10 @@ export class GardenService {
 
   add(request: AddGardenEntryRequest): Observable<GardenEntry> {
     return this.http.post<GardenEntry>(this.baseUrl, request);
+  }
+
+  addCustom(request: AddCustomPlantRequest): Observable<GardenEntry> {
+    return this.http.post<GardenEntry>(`${this.baseUrl}/custom`, request);
   }
 
   update(id: number, request: UpdateGardenEntryRequest): Observable<GardenEntry> {

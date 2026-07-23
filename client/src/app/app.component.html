@@ -2,7 +2,8 @@
   <a class="brand" routerLink="/">🌱 Gardener Cheat Sheet</a>
   <nav>
     <a routerLink="/plants" routerLinkActive="active">Browse plants</a>
-    <a routerLink="/garden" routerLinkActive="active">My garden</a>
+    <a routerLink="/garden" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">My garden</a>
+    <a routerLink="/garden/add" routerLinkActive="active">Add your own</a>
   </nav>
 </header>
 

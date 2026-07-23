@@ -4,7 +4,13 @@ namespace GardenerCheatSheet.Application.Dtos;
 public sealed record GardenEntryDto
 {
     public required int Id { get; init; }
-    public required int TrefleId { get; init; }
+
+    /// <summary>The plant's Trefle id, or null for a custom plant.</summary>
+    public int? TrefleId { get; init; }
+
+    /// <summary>True when this is a user-created plant (no Trefle detail page).</summary>
+    public required bool IsCustom { get; init; }
+
     public required string DisplayName { get; init; }
     public string? Nickname { get; init; }
     public string? ScientificName { get; init; }

@@ -61,7 +61,7 @@ public static class PlantMapper
 
     public static PlantDetailDto ToDetail(Plant plant, WateringSchedule watering) => new()
     {
-        TrefleId = plant.TrefleId,
+        TrefleId = plant.TrefleId ?? 0,
         DisplayName = plant.DisplayName,
         ScientificName = plant.ScientificName,
         CommonName = plant.CommonName,
@@ -81,10 +81,11 @@ public static class PlantMapper
         {
             Id = entry.Id,
             TrefleId = entry.Plant.TrefleId,
+            IsCustom = entry.Plant.Source == PlantSource.Custom,
             DisplayName = string.IsNullOrWhiteSpace(entry.Nickname) ? entry.Plant.DisplayName : entry.Nickname!,
             Nickname = entry.Nickname,
             ScientificName = entry.Plant.ScientificName,
-            ImageUrl = entry.Plant.ImageUrl,
+            ImageUrl = entry.ImageUrl,
             Notes = entry.Notes,
             IsIndoor = entry.IsIndoor,
             LightRequirement = entry.Plant.LightRequirement.ToDisplayString(),

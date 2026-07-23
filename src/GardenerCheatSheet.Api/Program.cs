@@ -1,4 +1,6 @@
+using GardenerCheatSheet.Api.Storage;
 using GardenerCheatSheet.Application;
+using GardenerCheatSheet.Application.Abstractions;
 using GardenerCheatSheet.Infrastructure;
 using GardenerCheatSheet.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +16,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+// User-photo storage is a web concern (served from wwwroot), so it lives in the API layer.
+builder.Services.AddScoped<IImageStorage, LocalImageStorage>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(AngularCorsPolicy, policy =>
@@ -28,13 +33,18 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Create the SQLite schema on startup. For the MVP this uses EnsureCreated;
-// swap for Database.Migrate() once EF migrations are introduced.
+// Apply any pending EF migrations on startup, creating the SQLite schema on a
+// fresh database. (Existing dev databases created by the old EnsureCreated path
+// have no migrations history; delete gardener.db once to let migrations take over.)
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.EnsureCreated();
+    db.Database.Migrate();
 }
+
+// Ensure the uploads folder exists so user-photo storage has somewhere to write.
+var uploadsRoot = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "uploads", "plants");
+Directory.CreateDirectory(uploadsRoot);
 
 if (app.Environment.IsDevelopment())
 {
@@ -43,6 +53,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(AngularCorsPolicy);
+
+// Serve user-uploaded plant photos from wwwroot (e.g. /uploads/plants/{file}).
+app.UseStaticFiles();
 
 app.MapControllers();
 app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
