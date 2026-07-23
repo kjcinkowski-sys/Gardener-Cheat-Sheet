@@ -11,7 +11,12 @@ public sealed record GardenEntryDto
     /// <summary>True when this is a user-created plant (no Trefle detail page).</summary>
     public required bool IsCustom { get; init; }
 
+    /// <summary>The heading shown to the user: the nickname if set, else the plant name.</summary>
     public required string DisplayName { get; init; }
+
+    /// <summary>The plant's own name, independent of any nickname (used when editing).</summary>
+    public required string PlantName { get; init; }
+
     public string? Nickname { get; init; }
     public string? ScientificName { get; init; }
     public string? ImageUrl { get; init; }

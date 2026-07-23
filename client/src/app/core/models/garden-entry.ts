@@ -5,6 +5,7 @@ export interface GardenEntry {
   trefleId?: number;
   isCustom: boolean;
   displayName: string;
+  plantName: string;
   nickname?: string;
   scientificName?: string;
   imageUrl?: string;

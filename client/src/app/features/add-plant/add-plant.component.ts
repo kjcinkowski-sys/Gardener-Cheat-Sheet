@@ -17,6 +17,7 @@ export class AddPlantComponent {
   private readonly router = inject(Router);
 
   displayName = '';
+  nickname = '';
   scientificName = '';
   isIndoor = false;
   lightLevel: number | null = null;
@@ -44,6 +45,9 @@ export class AddPlantComponent {
       displayName: this.displayName.trim(),
       isIndoor: this.isIndoor
     };
+    if (this.nickname.trim()) {
+      request.nickname = this.nickname.trim();
+    }
     if (this.scientificName.trim()) {
       request.scientificName = this.scientificName.trim();
     }
