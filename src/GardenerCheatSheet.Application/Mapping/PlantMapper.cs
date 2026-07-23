@@ -83,6 +83,7 @@ public static class PlantMapper
             TrefleId = entry.Plant.TrefleId,
             IsCustom = entry.Plant.Source == PlantSource.Custom,
             DisplayName = string.IsNullOrWhiteSpace(entry.Nickname) ? entry.Plant.DisplayName : entry.Nickname!,
+            PlantName = entry.Plant.DisplayName,
             Nickname = entry.Nickname,
             ScientificName = entry.Plant.ScientificName,
             ImageUrl = entry.ImageUrl,

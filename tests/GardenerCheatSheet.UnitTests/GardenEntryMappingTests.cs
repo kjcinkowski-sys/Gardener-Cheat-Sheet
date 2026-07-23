@@ -25,8 +25,23 @@ public class GardenEntryMappingTests
         Assert.True(dto.IsCustom);
         Assert.Null(dto.TrefleId);
         Assert.Equal("Habanero pepper", dto.DisplayName);
+        Assert.Equal("Habanero pepper", dto.PlantName);
         Assert.Equal("Capsicum chinense", dto.ScientificName);
         Assert.Equal("/uploads/plants/abc.jpg", dto.ImageUrl);
+    }
+
+    [Fact]
+    public void ToDto_WithNickname_DisplayNameIsNickname_ButPlantNameIsSpecies()
+    {
+        var plant = Plant.CreateCustom("Habanero pepper", null, null, null, GrowthInfo.Empty, isIndoor: false);
+        var entry = new GardenEntry(plant, nickname: "Spicy Steve", dateAdded: Today);
+
+        var dto = PlantMapper.ToDto(entry, _calculator.Derive(plant), Today);
+
+        // The heading shows the nickname, but the plant's own name is preserved for editing.
+        Assert.Equal("Spicy Steve", dto.DisplayName);
+        Assert.Equal("Habanero pepper", dto.PlantName);
+        Assert.Equal("Spicy Steve", dto.Nickname);
     }
 
     [Fact]

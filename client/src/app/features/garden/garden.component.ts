@@ -82,7 +82,8 @@ export class GardenComponent implements OnInit {
       imageUrl: entry.imageUrl ?? null,
       photoTouched: false,
       isCustom: entry.isCustom,
-      displayName: entry.displayName,
+      // The plant's own name, independent of any nickname.
+      displayName: entry.plantName,
       scientificName: entry.scientificName ?? '',
       lightLevel: this.lightLevelFromLabel(entry.lightRequirement)
     };
@@ -117,8 +118,11 @@ export class GardenComponent implements OnInit {
       }
     }
 
+    // Nickname applies to any entry (Trefle or custom).
+    request.nickname = this.edit.nickname;
+
     if (this.edit.isCustom) {
-      // Custom plants edit the plant's own name/scientific/light instead of a nickname.
+      // Custom plants can also edit the plant's own name/scientific/light.
       request.displayName = this.edit.displayName;
       request.scientificName = this.edit.scientificName;
       if (this.edit.lightLevel != null) {
@@ -126,8 +130,6 @@ export class GardenComponent implements OnInit {
       } else {
         request.clearLightLevel = true;
       }
-    } else {
-      request.nickname = this.edit.nickname;
     }
 
     this.apply(entry.id, request, () => (this.editingId = null));
