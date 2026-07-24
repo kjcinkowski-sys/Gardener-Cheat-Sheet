@@ -14,10 +14,13 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        // Postgres in every environment. Prod supplies the connection string via the
+        // ConnectionStrings__Default env var; the fallback matches the local docker-compose
+        // Postgres so a bare `dotnet run` and design-time `dotnet ef` both work.
         var connectionString = configuration.GetConnectionString("Default")
-                               ?? "Data Source=gardener.db";
+                               ?? "Host=localhost;Port=5432;Database=gardener;Username=postgres;Password=postgres";
 
-        services.AddDbContext<AppDbContext>(options => options.UseSqlite(connectionString));
+        services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
         services.AddScoped<IPlantRepository, PlantRepository>();
         services.AddScoped<IGardenRepository, GardenRepository>();

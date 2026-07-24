@@ -1,0 +1,17 @@
+# Local development Postgres for Gardener Cheat Sheet.
+# Start with: docker compose up -d
+# The API's default connection string (see Infrastructure/DependencyInjection.cs) points here.
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: gardener
+    ports:
+      - "5432:5432"
+    volumes:
+      - gardener_pgdata:/var/lib/postgresql/data
+
+volumes:
+  gardener_pgdata:

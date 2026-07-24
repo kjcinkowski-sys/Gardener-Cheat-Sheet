@@ -7,11 +7,12 @@ import {
   GardenEntry,
   UpdateGardenEntryRequest
 } from './models';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class GardenService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = '/api/garden';
+  private readonly baseUrl = `${environment.apiUrl}/garden`;
 
   getGarden(): Observable<GardenEntry[]> {
     return this.http.get<GardenEntry[]>(this.baseUrl);
