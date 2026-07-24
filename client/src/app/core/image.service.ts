@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface UploadedImage {
   url: string;
@@ -9,7 +10,7 @@ export interface UploadedImage {
 @Injectable({ providedIn: 'root' })
 export class ImageService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = '/api/images';
+  private readonly baseUrl = `${environment.apiUrl}/images`;
 
   /** Uploads a photo and returns the server URL to reference it by. */
   upload(file: File): Observable<UploadedImage> {

@@ -8,8 +8,9 @@ namespace GardenerCheatSheet.Application.Abstractions;
 public interface IImageStorage
 {
     /// <summary>
-    /// Persists the image <paramref name="content"/> and returns a relative URL
-    /// (e.g. <c>/uploads/plants/ab12….jpg</c>) that resolves to it.
+    /// Persists the image <paramref name="content"/> and returns a URL that resolves to
+    /// it — relative for local disk (e.g. <c>/uploads/plants/ab12….jpg</c>) or absolute for
+    /// object storage (e.g. <c>https://pub-xxxx.r2.dev/plants/ab12….jpg</c>).
     /// </summary>
     /// <param name="fileExtension">
     /// The validated extension to store the file under, including the leading dot
